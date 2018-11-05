@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour {
     public GameObject GameOverPanel;
     public TextMeshProUGUI GameOverScoreText;
     public bool IsGameOver { get; private set; }
+    public int Drunkness;
+    public bool IsDrunk;
 
     private float _timer;
 

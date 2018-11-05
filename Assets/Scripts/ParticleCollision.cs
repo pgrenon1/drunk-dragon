@@ -19,6 +19,10 @@ public class ParticleCollision : MonoBehaviour {
                 GameManager.Instance.ScoreText.transform.DOShakeScale(0.5f);
                 BuildingAudio.Play();
                 GameManager.Instance.ShakeCamera();
+                if (GameManager.Instance.IsDrunk)
+                {
+                    GameManager.Instance.Drunkness += 1;
+                }
                 Destroy(b.gameObject);
             }
         }

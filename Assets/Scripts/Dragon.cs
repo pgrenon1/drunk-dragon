@@ -17,7 +17,9 @@ public class Dragon : MonoBehaviour {
     public int MinToFire;
     public int MaxToFire;
     public AudioSource FireAudio;
+    public Transform Lives;
 
+    private List<GameObject> _beers;
     private bool _arduinoConnected;
     private bool _fireing;
     private int _alcLevel;
@@ -35,6 +37,11 @@ public class Dragon : MonoBehaviour {
         mModule = Particles.main;
         _stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
         _sr = GetComponent<SpriteRenderer>();
+        _beers = new List<GameObject>();
+        for (int i = 0; i < Lives.childCount; i++)
+        {
+            _beers.Add(Lives.GetChild(i).gameObject);
+        }
     }
 	
 	// Update is called once per frame
@@ -72,6 +79,10 @@ public class Dragon : MonoBehaviour {
                 if (!FireAudio.isPlaying)
                     FireAudio.Play();
                 transform.position = transform.position + Vector3.down * Speed;
+                if (GameManager.Instance.Drunkness >= 1)
+                {
+                    transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z - 2f);
+                }
             }
             else if (_alcLevel >= Average(_lastValues))
             {
@@ -79,6 +90,10 @@ public class Dragon : MonoBehaviour {
                 if (!FireAudio.isPlaying)
                     FireAudio.Play();
                 transform.position = transform.position + Vector3.down * Speed;
+                if (GameManager.Instance.Drunkness >= 1)
+                {
+                    transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z - 2f);
+                }
             } else
             {
                 eModule.rateOverTime = 0;
@@ -177,6 +192,9 @@ public class Dragon : MonoBehaviour {
 
     private void Hurt()
     {
+        GameObject toDestroy = _beers[Health - 1];
+        _beers.Remove(toDestroy);
+        Destroy(toDestroy);
         Health--;
         StartCoroutine(FlashRed());
         if (Health <= 0)
